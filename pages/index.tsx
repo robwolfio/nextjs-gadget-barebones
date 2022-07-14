@@ -1,9 +1,7 @@
 import { useAction, useFindMany, useGet } from "@gadgetinc/react";
 import { isEqual } from "lodash";
-import type { NextPage } from "next";
-import Head from "next/head";
 import React, { useState } from "react";
-import { api } from "../utility/api";
+import { api } from "../lib/api";
 
 const LogOutButton = () => {
   const [{ error, fetching }, logout] = useAction(api.currentSession.logOut, {
@@ -50,7 +48,7 @@ const LoginForm = () => {
   );
 };
 
-const Home: NextPage = () => {
+const Home = () => {
   const [{ error, fetching, data }, refresh] = useGet(api.currentSession, {
     select: {
       id: true,
@@ -60,19 +58,11 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Login Example</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <div>
-        {fetching && (
-          <>fetching...</>
-        )}
-        {isEqual(data?.state, { created: "loggedIn" }) && <><p>JSON.stringify(data)</p><p>LogOutButton</p></>}
+        {fetching && (<>fetching...</>)}
+        {isEqual(data?.state, { created: "loggedIn" }) && <><p>JSON.stringify(data)</p><p><LogOutButton /></p></>}
         {isEqual(data?.state, { created: "loggedOut" }) && <LoginForm />}
       </div>
-
     </>
   );
 };
